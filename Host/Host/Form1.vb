@@ -14,6 +14,7 @@ Public Class Form1
     Public ServerNumbers As Integer = 0
 
     Private Sub BackgroundWorker1_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
+
         Dim l As New TcpListener(3317)
         l.Start()
         While True
@@ -64,6 +65,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        DownloadServerForm.Show()
         BackgroundWorker1.RunWorkerAsync()
     End Sub
 
