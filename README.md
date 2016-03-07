@@ -12,7 +12,7 @@ Ich bin ein Entwickler von diesen RAT und wollte es mal weiterführen da die Ent
 TODO
 ====
 
-- Downloadserver + Uploadeserver
+- Downloadserver + Uploadeserver <- Working ...
 - Edit File Browser
 - Added Desktop Screen
 - Added Reading Volumes
