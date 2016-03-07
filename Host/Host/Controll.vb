@@ -349,17 +349,22 @@ Public Class Controll
         If sf.ShowDialog = Windows.Forms.DialogResult.OK Then
             Connection.w.WriteLine("downloadfile|" & ListView1.SelectedItems.Item(0).Text.ToString())
             Connection.w.Flush()
-            Dim lastlogindata As String = Connection.r.ReadLine()
+            'Dim lastlogindata() As Byte = Connection.r.Read()
+            Dim networkStream As NetworkStream = Connection.client.GetStream()
+            Dim bytes(Connection.client.ReceiveBufferSize) As Byte
+            networkStream.Read(bytes, 0, CInt(Connection.client.ReceiveBufferSize))
+            IO.File.WriteAllBytes(sf.FileName, bytes)
             'MsgBox(lastlogindata, MsgBoxStyle.Critical, "")
-            Dim vByteBuffer(lastlogindata.Length + 1) As Byte
-            Dim vHexChar As String = String.Empty
-            For i As Integer = 0 To (lastlogindata.Length - 1) Step 2
-                vHexChar = lastlogindata(i) & lastlogindata(i + 1)
-                vByteBuffer(i / 2) = Byte.Parse(vHexChar, Globalization.NumberStyles.HexNumber)
-            Next
-            Using vFs As New FileStream(sf.FileName, FileMode.Create)
-                vFs.Write(vByteBuffer, 0, vByteBuffer.Length)
-            End Using
+            'Dim vByteBuffer(lastlogindata.Length + 1) As Byte
+            'Dim vHexChar As String = String.Empty
+            'For i As Integer = 0 To (lastlogindata.Length - 1) Step 2
+            'vHexChar = lastlogindata(i) & lastlogindata(i + 1)
+            'vByteBuffer(i / 2) = Byte.Parse(vHexChar, Globalization.NumberStyles.HexNumber)
+            'Next
+            'Using vFs As New FileStream(sf.FileName, FileMode.Create)
+            'vFs.Write(vByteBuffer, 0, vByteBuffer.Length)
+            'End Using
+
         Else
             MsgBox("Sie haben der Vorgang Abgebrochen", MsgBoxStyle.Information, "Manual")
         End If

