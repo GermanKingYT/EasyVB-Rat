@@ -18,7 +18,7 @@ Public Class Controll
     Public FolderFileD As New List(Of FolderFileDia)
 
     Private Sub Controll_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        My.Computer.Audio.Play(My.Resources.untitled, AudioPlayMode.Background)
+        'My.Computer.Audio.Play(My.Resources.untitled, AudioPlayMode.Background)
         Me.Text = "Client Number: " & Number
         Connection.w.WriteLine("land")
         Connection.w.Flush()

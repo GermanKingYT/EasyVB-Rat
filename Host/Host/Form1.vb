@@ -35,7 +35,7 @@ Public Class Form1
     Public Sub refresh()
         ListView1.Items.Clear()
         'Try
-        My.Computer.Audio.Play(My.Resources.connected, AudioPlayMode.Background)
+        'My.Computer.Audio.Play(My.Resources.connected, AudioPlayMode.Background)
         For Each t As TrojanerBase In Server
             'Try
             Dim lvi As ListViewItem = ListView1.Items.Add(t.number)
