@@ -7,3 +7,12 @@ REUPLOAD
 ========
 
 Ich bin ein Entwickler von diesen RAT und wollte es mal weiterführen da die Entwicklung eingestellt wurde.
+
+
+TODO
+====
+
+- Downloadserver + Uploadeserver
+- Edit File Browser
+- Added Desktop Screen
+- Added Reading Volumes
