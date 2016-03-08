@@ -3,6 +3,7 @@ Imports System.Threading
 Imports System.IO
 Imports System.Text
 
+
 Public Class DownloadServerForm
 
     Private Sub DownloadServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -20,6 +21,7 @@ Public Class DownloadServerForm
         Try
             Dim port As Integer = CInt(TextBox1.Text)
             Dim l As New TcpListener(port)
+            l.Start()
             While True
                 Dim client As TcpClient = l.AcceptTcpClient()
                 Dim t As New Thread(AddressOf DownloadFilesClient)
@@ -27,6 +29,9 @@ Public Class DownloadServerForm
             End While
         Catch ex As Exception
             MsgBox("Downloadserver are crashed!", MsgBoxStyle.Critical, "ERROR")
+#If DEBUG Then
+            MsgBox(ex.ToString)
+#End If
             Me.Invoke(New ChangePanelColor_d(AddressOf ChangePanelColor), Color.Red)
         End Try
     End Sub
