@@ -111,6 +111,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ping.vb" />
+    <Compile Include="UploadServerForm.Designer.vb">
+      <DependentUpon>UploadServerForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UploadServerForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controll.resx">
