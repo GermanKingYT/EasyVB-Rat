@@ -13,6 +13,7 @@ TODO
 ====
 
 - ~~Downloadserver~~ + _Uploadeserver_ <- Working ...
+- Downloadclient + Uploadclient
 - Edit File Browser
 - Added Desktop Screen
 - Added Reading Volumes
