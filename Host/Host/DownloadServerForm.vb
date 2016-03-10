@@ -24,7 +24,7 @@ Public Class DownloadServerForm
             l.Start()
             While True
                 Dim client As TcpClient = l.AcceptTcpClient()
-                Dim t As New Thread(AddressOf DownloadFilesClient)
+                Dim t As New Thread(AddressOf DownloadFilesServer)
                 t.Start(client)
             End While
         Catch ex As Exception
@@ -36,12 +36,16 @@ Public Class DownloadServerForm
         End Try
     End Sub
 
-    Public Sub DownloadFilesClient(ByVal client As TcpClient)
+    Public Sub DownloadFilesServer(ByVal client As TcpClient)
         Dim filenamedia As New SaveFileDialog()
         Dim filename As String = ""
         While True
             If filenamedia.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                Exit While
+                If File.Exists(filenamedia.FileName) Then
+                    MsgBox("Datei exestiert bereits!", MsgBoxStyle.Critical, "ERROR")
+                Else
+                    Exit While
+                End If
             End If
         End While
         filename = filenamedia.FileName
