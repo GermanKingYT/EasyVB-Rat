@@ -13,29 +13,50 @@ Public Class UploadClient
         t.Start(obj)
     End Sub
 
+    Const BufferSize = 1024
     Public Sub DoUploadFile(ByVal obj() As Object)
         Dim port As Integer = CInt(obj(0))
         Dim file As String = obj(1).ToString()
 
 
-        Dim networkStream As NetworkStream
         Dim tcpClnt As New System.Net.Sockets.TcpClient
         Dim ip As String = obj(2).ToString()
+        Dim bw As BinaryWriter
         Try
             tcpClnt.Connect(ip, port)
-            networkStream = tcpClnt.GetStream()
+            bw = New BinaryWriter(tcpClnt.GetStream())
         Catch ex As Exception
 #If DEBUG Then
             MsgBox(ex.ToString)
 #End If
         End Try
-        Dim fs As FileStream
-        fs = New FileStream(file, FileMode.Open)
-        Dim objReader As New BinaryReader(fs)
-        Dim send() As Byte = objReader.ReadBytes(fs.Length)
-        networkStream.Write(send, 0, send.Length)
-        objReader.Close()
-        fs.Close()
+        'Dim fs As FileStream
+        'f() 's = New FileStream(file, FileMode.Open)
+        ' Dim objReader As New BinaryReader(fs)
+        Dim fs As New FileStream(file, FileMode.Open, FileAccess.Read)
+        Dim packets = Convert.ToInt32(Math.Ceiling(fs.Length / BufferSize))
+        Dim remainingBytes = CInt(fs.Length)
+        bw.Write(remainingBytes)
+        'Thread.Sleep(100)
+        Dim fi As New FileInfo(file)
+        bw.Write(fi.Name)
+        'Thread.Sleep(100)
+        For i = 0 To packets - 1
+            Dim currentPacketLength As Integer
+            If remainingBytes > BufferSize Then
+                currentPacketLength = BufferSize
+                remainingBytes -= currentPacketLength
+            Else
+                currentPacketLength = remainingBytes
+                remainingBytes = 0
+            End If
+
+            Dim sendingBuffer = New Byte(currentPacketLength - 1) {}
+            fs.Read(sendingBuffer, 0, currentPacketLength)
+            bw.Write(sendingBuffer, 0, sendingBuffer.Length)
+            'Thread.Sleep(100)
+            tcpClnt.Close()
+        Next
 
     End Sub
 

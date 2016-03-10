@@ -6,15 +6,27 @@ Imports System.Text
 
 Public Class DownloadServerForm
 
+    Dim DLF As String = ""
     Private Sub DownloadServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        If Not TextBox1.Text = "" Then
-            ChangePanelColor(Color.Green)
-            BackgroundWorker1.RunWorkerAsync()
-        End If
+        While True
+            Dim bfd As New FolderBrowserDialog
+            Dim result As DialogResult = bfd.ShowDialog()
+            If result = Windows.Forms.DialogResult.OK Then
+                DLF = bfd.SelectedPath
+                If Not TextBox1.Text = "" Then
+                    ChangePanelColor(Color.Green)
+                    BackgroundWorker1.RunWorkerAsync()
+                End If
+                Exit While
+            ElseIf result = Windows.Forms.DialogResult.Cancel Then
+                Me.Hide()
+                Exit While
+            End If
+        End While
     End Sub
 
     Private Sub BackgroundWorker1_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
@@ -38,35 +50,59 @@ Public Class DownloadServerForm
         End Try
     End Sub
 
-    Public Sub DownloadFilesServer(ByVal client As TcpClient)
+    Const BufferSize = 1024
+    Public Async Function DownloadFilesServer(ByVal client As TcpClient) As Task
         Dim filename As String = ""
-        Dim obj() As Object
-        While True
-            obj = Me.Invoke(New GetSaveFileDialog_d(AddressOf GetSaveFileDialog))
-            If obj(0) = Windows.Forms.DialogResult.OK Then
-                If File.Exists(obj(1).ToString) Then
-                    MsgBox("Datei exestiert bereits!", MsgBoxStyle.Critical, "ERROR")
-                Else
-                    Exit While
-                End If
-            End If
-        End While
-        filename = obj(1).ToString
         Try
-            Dim lvi As ListViewItem = Me.Invoke(New AddListBoxItem_d(AddressOf AddListBoxItem), filename)
-            Dim networkStream As NetworkStream = client.GetStream()
-            Dim bytes(client.ReceiveBufferSize) As Byte
-            networkStream.Read(bytes, 0, CInt(client.ReceiveBufferSize))
-            Dim clientdata As String = Encoding.ASCII.GetString(bytes)
-            Dim fi As New FileInfo(filename)
-            Dim sw As StreamWriter = fi.CreateText()
-            sw.Write(clientdata)
-            sw.Close()
-            Me.Invoke(New ChangeListBoxItem_d(AddressOf ChangeListBoxItem), lvi)
-        Catch e As Exception
+            'Dim networkStream As NetworkStream = client.GetStream()
+            'Dim bytes(client.ReceiveBufferSize) As Byte
+            'networkStream.Read(bytes, 0, CInt(client.ReceiveBufferSize))
+            'Dim clientdata As String = Encoding.ASCII.GetString(bytes)
+            'Dim fi As New FileInfo(filename)
+            'IO.File.WriteAllBytes(filename, bytes)
+            'client.Close()
+            Dim br As New BinaryReader(client.GetStream)
+            Dim fileLength As Integer = 0
+            fileLength = br.ReadInt32()
+            Dim filen As String = ""
+            filen = br.ReadString()
+            Dim lvi As ListViewItem = Me.Invoke(New AddListBoxItem_d(AddressOf AddListBoxItem), filen)
+            filename = DLF & "\" & filen
+            If File.Exists(filename) Then
+                Dim i As Integer = i
+                While True
+                    If File.Exists(filename & "." & i) Then
+                    Else
+                        filename = filename & "." & i
+                        Exit While
+                    End If
+                End While
+            Else
+            End If
 
+            Dim packets = Convert.ToInt32(Math.Ceiling(fileLength / BufferSize))
+            Dim remainingBytes = fileLength
+            Dim fs As New FileStream(filename, FileMode.Create, FileAccess.Write)
+
+            For i = 0 To packets - 1
+                Dim currentPacketLength As Integer
+                If remainingBytes > BufferSize Then
+                    currentPacketLength = BufferSize
+                    remainingBytes -= currentPacketLength
+                Else
+                    currentPacketLength = remainingBytes
+                    remainingBytes = 0
+                End If
+                Dim receivingBuffer = br.ReadBytes(currentPacketLength)
+                fs.Write(receivingBuffer, 0, receivingBuffer.Length)
+            Next
+
+            Me.Invoke(New ChangeListBoxItem_d(AddressOf ChangeListBoxItem), lvi)
+            'client.Close()
+        Catch e As Exception
+            MsgBox(e.ToString)
         End Try
-    End Sub
+    End Function
 
     Public Delegate Function GetSaveFileDialog_d() As Object()
     Public Function GetSaveFileDialog() As Object()
@@ -79,15 +115,15 @@ Public Class DownloadServerForm
 
     Public Delegate Function AddListBoxItem_d(ByVal filename As String) As ListViewItem
     Public Function AddListBoxItem(ByVal filename As String)
-        Dim f As New IO.FileInfo(filename)
-        Dim listviewitem As New ListViewItem(f.Name)
+        'Dim f As New IO.FileInfo(filename)
+        Dim listviewitem As New ListViewItem(filename)
         listviewitem.SubItems.Add("downloading ...")
         Return ListView1.Items.Add(listviewitem)
     End Function
 
     Public Delegate Sub ChangeListBoxItem_d(ByVal filename As ListViewItem)
     Public Sub ChangeListBoxItem(ByVal filename As ListViewItem)
-        filename.SubItems(0).Text = "finish"
+        filename.SubItems(1).Text = "finish"
     End Sub
 
     Public Delegate Sub ChangePanelColor_d(ByVal color As Color)
