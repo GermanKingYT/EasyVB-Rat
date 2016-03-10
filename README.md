@@ -12,8 +12,8 @@ Ich bin ein Entwickler von diesen RAT und wollte es mal weiterführen da die Ent
 TODO
 ====
 
-- ~~Downloadserver~~ + _Uploadeserver_ <- Working ...
-- Downloadclient + Uploadclient
+- ~~Downloadserver + Uploadeserver~~
+- _Downloadclient_ + Uploadclient <- Working ...
 - Edit File Browser
 - Added Desktop Screen
 - Added Reading Volumes
