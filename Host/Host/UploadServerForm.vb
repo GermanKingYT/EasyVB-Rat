@@ -22,6 +22,8 @@ Public Class UploadServerForm
             Dim port As Integer = CInt(TextBox1.Text)
             Dim l As New TcpListener(port)
             l.Start()
+            InfoBrief.PortUploadServer = CInt(TextBox1.Text)
+            TextBox1.Text = "" & CInt(TextBox1.Text)
             While True
                 Dim client As TcpClient = l.AcceptTcpClient()
                 Dim t As New Thread(AddressOf UploadFilesServer)

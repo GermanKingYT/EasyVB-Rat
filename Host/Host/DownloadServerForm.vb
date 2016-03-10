@@ -22,6 +22,8 @@ Public Class DownloadServerForm
             Dim port As Integer = CInt(TextBox1.Text)
             Dim l As New TcpListener(port)
             l.Start()
+            InfoBrief.PortDownloadServer = CInt(TextBox1.Text)
+            TextBox1.Text = "" & CInt(TextBox1.Text)
             While True
                 Dim client As TcpClient = l.AcceptTcpClient()
                 Dim t As New Thread(AddressOf DownloadFilesServer)
@@ -37,18 +39,19 @@ Public Class DownloadServerForm
     End Sub
 
     Public Sub DownloadFilesServer(ByVal client As TcpClient)
-        Dim filenamedia As New SaveFileDialog()
         Dim filename As String = ""
+        Dim obj() As Object
         While True
-            If filenamedia.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                If File.Exists(filenamedia.FileName) Then
+            obj = Me.Invoke(New GetSaveFileDialog_d(AddressOf GetSaveFileDialog))
+            If obj(0) = Windows.Forms.DialogResult.OK Then
+                If File.Exists(obj(1).ToString) Then
                     MsgBox("Datei exestiert bereits!", MsgBoxStyle.Critical, "ERROR")
                 Else
                     Exit While
                 End If
             End If
         End While
-        filename = filenamedia.FileName
+        filename = obj(1).ToString
         Try
             Dim lvi As ListViewItem = Me.Invoke(New AddListBoxItem_d(AddressOf AddListBoxItem), filename)
             Dim networkStream As NetworkStream = client.GetStream()
@@ -64,6 +67,15 @@ Public Class DownloadServerForm
 
         End Try
     End Sub
+
+    Public Delegate Function GetSaveFileDialog_d() As Object()
+    Public Function GetSaveFileDialog() As Object()
+        Dim filenamedia As New SaveFileDialog()
+        Dim obj(2) As Object
+        obj(0) = filenamedia.ShowDialog()
+        obj(1) = filenamedia.FileName
+        Return obj
+    End Function
 
     Public Delegate Function AddListBoxItem_d(ByVal filename As String) As ListViewItem
     Public Function AddListBoxItem(ByVal filename As String)

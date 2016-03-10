@@ -32,6 +32,8 @@ Partial Class Form1
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Button1 = New System.Windows.Forms.Button()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'ListView1
@@ -92,11 +94,31 @@ Partial Class Form1
         'BackgroundWorker1
         '
         '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(614, 388)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(153, 23)
+        Me.Button2.TabIndex = 2
+        Me.Button2.Text = "Download Server"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(455, 389)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(153, 23)
+        Me.Button3.TabIndex = 3
+        Me.Button3.Text = "Upload Server"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(779, 395)
+        Me.ClientSize = New System.Drawing.Size(779, 417)
+        Me.Controls.Add(Me.Button3)
+        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.ListView1)
         Me.Name = "Form1"
@@ -114,5 +136,7 @@ Partial Class Form1
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents Button3 As System.Windows.Forms.Button
 
 End Class

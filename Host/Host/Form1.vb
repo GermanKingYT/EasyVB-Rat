@@ -65,7 +65,6 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        UploadServerForm.Show()
         BackgroundWorker1.RunWorkerAsync()
     End Sub
 
@@ -105,4 +104,11 @@ Public Class Form1
         Return text.Replace("<strich>", "|")
     End Function
 
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        DownloadServerForm.Show()
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        UploadServerForm.Show()
+    End Sub
 End Class

